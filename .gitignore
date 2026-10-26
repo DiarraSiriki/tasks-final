@@ -1,0 +1,16 @@
+# IDEs
+.vscode/*
+.idea
+.cursor
+.windsurf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env.*
+!.env.example

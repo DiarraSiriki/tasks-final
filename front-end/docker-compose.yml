@@ -1,0 +1,88 @@
+services:
+  # Base de données locale pour le backend
+  db:
+    image: postgres:17-alpine
+    container_name: taskflow-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestjs-restaurant
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nestjs-restaurant"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - taskflow-network
+
+  # Backend NestJS (contexte = dossier back-end)
+  backend:
+    build:
+      context: ../back-end
+      dockerfile: Dockerfile
+    container_name: taskflow-backend
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/nestjs-restaurant?schema=public
+      BETTER_AUTH_SECRET: change-me-in-production-please
+      BETTER_AUTH_URL: http://localhost:3000
+      TRUSTED_ORIGINS: http://localhost:5173,http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    # Applique le schéma Prisma puis démarre l'API
+    command: ["sh", "-c", "bun run db:push && bun run start"]
+    networks:
+      - taskflow-network
+
+  # Frontend - développement (hot-reload)
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: taskflow-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: ""
+      VITE_PROXY_TARGET: http://backend:3000
+    networks:
+      - taskflow-network
+    depends_on:
+      - backend
+
+  # Frontend - prévisualisation du build de production
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ""
+        VITE_PROXY_TARGET: http://backend:3000
+    container_name: taskflow-frontend-prod
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ""
+      VITE_PROXY_TARGET: http://backend:3000
+    networks:
+      - taskflow-network
+    depends_on:
+      - backend
+    profiles:
+      - production
+
+networks:
+  taskflow-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
