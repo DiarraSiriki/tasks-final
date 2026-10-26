@@ -34,6 +34,23 @@ export interface SessionResponse {
   user: User;
 }
 
+// Types pour la gestion des utilisateurs
+export interface ManagedUser {
+  id: string;
+  email: string;
+  name: string | null;
+  emailVerified: boolean;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+}
+
 // Types pour les tâches
 export const TASK_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH'] as const;
 

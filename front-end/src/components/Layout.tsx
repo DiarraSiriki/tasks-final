@@ -27,6 +27,9 @@ export function Layout() {
             <li>
               <Link to="/tasks">Mes tâches</Link>
             </li>
+            <li>
+              <Link to="/users">Utilisateurs</Link>
+            </li>
           </ul>
         </nav>
         <div className="flex-none gap-2">

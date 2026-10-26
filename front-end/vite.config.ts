@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   const proxy = {
     '/api': { target: proxyTarget, changeOrigin: true },
     '/tasks': { target: proxyTarget, changeOrigin: true },
+    '/users': { target: proxyTarget, changeOrigin: true },
     '/examples': { target: proxyTarget, changeOrigin: true },
   }
 

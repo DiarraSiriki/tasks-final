@@ -10,7 +10,7 @@ const loginSchema = z.object({
   email: z.email('Email invalide'),
   password: z
     .string()
-    .min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+    .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;

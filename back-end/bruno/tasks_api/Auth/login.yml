@@ -1,0 +1,23 @@
+info:
+  name: login
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/api/auth/sign-in/email"
+  auth: inherit
+  body:
+    mimeType: application/json
+    text: |-
+      {
+        "email": "test@example.com",
+        "password": "password123"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

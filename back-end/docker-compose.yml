@@ -1,0 +1,39 @@
+name: tasks-final-backend
+
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/nestjs-restaurant?schema=public
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:?Définissez BETTER_AUTH_SECRET dans back-end/.env}
+      - BETTER_AUTH_URL=http://localhost:3000
+      - TRUSTED_ORIGINS=http://localhost:5173,http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    # Applique le schéma Prisma puis démarre l'API
+    command: ["sh", "-c", "bun run db:push && bun run start"]
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nestjs-restaurant
+    # Port 5434 pour cohabiter avec d'autres PostgreSQL locaux (5432/5433)
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nestjs-restaurant"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:

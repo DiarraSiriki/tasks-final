@@ -1,16 +1,42 @@
-# IDEs
-.vscode/*
-.idea
-.cursor
-.windsurf
+# Dépendances
+**/node_modules/
 
-# OS
+# Builds et caches TypeScript
+**/dist/
+**/build/
+**/*.tsbuildinfo
+
+# Variables d'environnement (ne jamais committer de secrets)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+**/*.log
+logs/
+
+# Système
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
+# IDE / éditeurs
+.vscode/*
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
 
-# Environment
-.env.*
-!.env.example
+# Outils IA et skills locaux
+.agents/
+.claude/
+.cursor/
+.devin/
+.windsurf/
+**/skills-lock.json
+
+# Prisma : client généré (les migrations, elles, sont versionnées)
+back-end/src/generated/
+
+# Tests et couverture
+**/coverage/
+**/test-results/

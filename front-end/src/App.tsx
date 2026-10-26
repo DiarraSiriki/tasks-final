@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Tasks } from './pages/Tasks';
+import { Users } from './pages/Users';
 import { AuthProvider } from './providers/AuthProvider';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           >
             <Route index element={<Navigate to="/tasks" replace />} />
             <Route path="tasks" element={<Tasks />} />
+            <Route path="users" element={<Users />} />
           </Route>
           <Route path="*" element={<Navigate to="/tasks" replace />} />
         </Routes>
